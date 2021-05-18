@@ -19,6 +19,7 @@ gem 'jbuilder', '~> 2.7'
 gem "font-awesome-rails"
 gem 'carrierwave'
 
+
 gem 'pry'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
