@@ -1,0 +1,54 @@
+
+
+<ul class="we-comet ">
+  <li style="width: 500px;">
+      <div class="comet-avatar" style="width: 0.1%; padding-right: 9px;">
+        <% if comment.user.profile.photo.url %>
+          <%= image_tag (comment.user.profile.photo.url :controls =>true, style: 'display:inline') %>
+        <% end %>
+      </div>
+      <div class="we-comment">
+        <div class="coment-head">
+          <h5><a href="time-line.html" title=""><%= comment.user.username %></a></h5>
+          <span><%= comment.created_at %></span>
+          <i data-comment = "comment-<%= comment.id %>" class="more_comment_button we-reply fa fa-reply" title="Reply"></i>
+        </div>
+        <p><%= comment.content %></p>
+      </div>
+
+      <ul class="hide" id= "comment-<%= comment.id %>" >
+        <%= simple_form_for [comment, Comment.new],remote: true do |f| %>
+          <div class="form-group " style="margin-top: 0px;margin-bottom: 0px;display: inline;">
+            <%= f.input :user_id,:input_html => { :value => current_user.id},style: "width:0px;;" ,as: :hidden %>
+            <%= f.text_area :content, class: "form-control post-comt-box",style: "background: #f3f3f3 none repeat scroll 0 0;  border-color: transparent; border-radius: 3px;color: #000000;font-size: 13.5px;font-weight: 500;height: 40px;line-height: 16px;display:inline;max-width: 80%;", placeholder: "Add a Reply", id: "com-#{comment.id}" %>
+          </div>
+          <span><%= f.submit "Reply", class: "btn btn-primary",style: "vertical-align: text-bottom;margin-bottom:5px;display:inline;" %></span>
+
+        <% end %>
+      </ul> 
+
+
+      <li id="recent-comments-<%= comment.id %>">
+      <%= render partial: 'comments/comment', collection: comment.comments %>
+      </li>
+
+
+    </li>
+</ul>
+
+<!-- <li >
+  <= comment.content %> 
+  <span><button data-comment = "comment-<%= comment.id %>" class="more_comment_button">Comment</button></span>
+  <ul class="hide" id= "comment-<%= comment.id %>" >
+    <= form_for [comment, Comment.new] do |f| %>
+        <= f.text_area :content, placeholder: "Add a Reply" %><br/>
+        <= f.submit "Reply"  %>
+    < end %>
+  </ul>
+
+  <ul  >
+      <= render partial: 'comments/comment', collection: comment.comments %>
+  </ul>
+
+</li> -->
+

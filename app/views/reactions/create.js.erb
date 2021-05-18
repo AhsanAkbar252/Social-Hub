@@ -1,0 +1,7 @@
+console.log("<%=@post.id%>");
+debugger;
+$('#reaction-<%= @post.id %>').removeClass("far fa-heart");
+$('#reaction-<%= @post.id %>').addClass("fas fa-heart");
+$('#reaction-<%= @post.id %>').attr("data-method", "delete");
+$('#reaction-<%= @post.id %>').attr("href", "<%= post_reaction_path(@post,@post.reactions.find { |reaction| reaction.user_id == current_user.id}) %>");
+$('#ins-<%= @post.id %>').text('<%= @post.reactions.count %>')

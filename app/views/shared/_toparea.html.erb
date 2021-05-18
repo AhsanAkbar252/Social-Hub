@@ -1,0 +1,88 @@
+<div class="feature-photo">
+        <div class="avat" style="    overflow: hidden;position: relative;width: 100%;max-height: 500px;" >
+          <figure >        
+            <% if @user.profile != nil && @user.profile.cover_photo.url != nil %>
+             <%= image_tag @user.profile.cover_photo.url, :style=> "width:100%;" %>
+            <% else %>
+            <%= image_pack_tag 'media/images/resources/default_page_cover.png'%>
+            <% end %>
+          </figure>
+        </div>
+      <div class="add-btn" style = "display: flex ">
+        <!-- <span style="align-self: center;">1205 followers</span> -->
+        <% if current_user != @user %>
+          <div>
+            <%= simple_form_for Room.new,:html => { :style => ' display: flex' }  do |room| %>
+              <%= room.input :first_person_id,:input_html => { :value => current_user.id} ,as: :hidden %>
+              <%= room.input :second_person_id,:input_html => { :value => @user.id} ,as: :hidden %>
+              <%= room.submit "Message", class: 'btn btn-primary',style: "margin:15px;" %>
+            <% end %>
+          </div>
+        <% end %>
+        <% if current_user.can_add_as_friend(@user) %>
+          <div>
+              <%= simple_form_for @friend_request,:html => { :style => ' display: flex' } do |form| %>
+              <%= form.input :requestor_id,:input_html => { :value => current_user.id} ,as: :hidden %> 
+              <%= form.input :receiver_id, :input_html => { :value => @user.id }, as: :hidden %>
+              <%= form.submit "Add Friend", class: 'btn btn-primary',style: "margin:15px;" %>
+              <% end %>
+          </div>
+        <% elsif current_user != @user && current_user.friendships_as_friend_a.where(friend_b_id: @user.id).or(current_user.friendships_as_friend_b.where(friend_a_id: @user.id)).first != nil  %>
+          <% @friendship= current_user.friendships_as_friend_a.where(friend_b_id: @user.id).or(current_user.friendships_as_friend_b.where(friend_a_id: @user.id)).first %>
+
+          <%= link_to "unfriend",friendship_path(@friendship),method: :delete,data:{confirm: "Are you sure to Unfriend this user"}, class: 'btn btn-primary',style: "margin:15px; font-size: 18px;padding: 6px 13px;" %><!-- 
+        < else %>
+          <= link_to 'hello',root_path,class: 'btn btn-primary',style: "margin:15px; font-size: 18px;padding: 6px 13px;" %> -->
+        <% end %>
+      </div>
+<!--       <form class="edit-phto">
+        <i class="fa fa-camera-retro"></i>
+        <label class="fileContainer">
+          Edit Cover Photo
+        <input type="file"/>
+        </label>
+      </form> -->
+      <div class="container-fluid">
+        <div class="row merged">
+          <div class="col-lg-2 col-sm-3">
+            <div class="user-avatar" style="background-color: black;">
+              <figure style="width: 200px; height: 150px;overflow: hidden;">
+                <% if @user.profile != nil  && @user.profile.photo.url != nil %>
+                 <%= image_tag (@user.profile.photo.url :controls =>true, style: 'display:inline') %>
+                <% else %>
+                <%= image_pack_tag 'media/images/resources/default_profile.png'%>
+                <% end %>
+<!--                 <form class="edit-phto">
+                  <i class="fa fa-camera-retro"></i>
+                  <label class="fileContainer">
+                    Edit Display Photo
+                    <input type="file"/>
+                  </label>
+                </form> -->
+              </figure>
+            </div>
+          </div>
+          <div class="col-lg-10 col-sm-9">
+            <div class="timeline-info" style="margin-right: 100px">
+              <ul>
+                <li class="admin-name">
+                  <h5><%= @user.username %></h5>
+                  <!-- <span>Group Admin</span> -->
+                </li >
+                <li class="time" >
+                  <a class="" href="<%= timeline_path(@user.id) %>" title="" data-ripple="">time line</a>
+<!--                   <a class="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
+                  <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a> -->
+                  <a class="" href="<%= friendships_path(@user.id) %>" title="" data-ripple="">Friends</a>
+                  <!-- <a class="" href="timeline-groups.html" title="" data-ripple="">Groups</a> -->
+                  <% if @user.profile %>
+                  <a class="" href="<%= profile_path(@user.profile) %>" title="" data-ripple="">about</a>
+                  <% end %>
+                  <!-- <a class="" href="#" title="" data-ripple="">more</a> -->
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

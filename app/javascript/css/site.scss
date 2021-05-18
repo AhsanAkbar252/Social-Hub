@@ -1,0 +1,27 @@
+@import "~bootstrap/scss/bootstrap.scss";
+@import "rails-chat";
+@import "example";
+.hide{
+  display: none;
+}
+
+.show{
+  display: block;
+}
+.search-panel{
+  margin-right:13%;
+}
+
+
+.gallery > img{
+  margin-bottom: 10px;
+}
+
+.gallery > video{
+  max-width: 359px;
+  max-height: 240px;
+  margin-bottom: 10px;
+}
+
+
+

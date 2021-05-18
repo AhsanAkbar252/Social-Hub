@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12" style="margin-top: 20px;">
+      <h2>Friend Requests Received</h2>
+      <% @friend_requests.each do|friend_request| %>
+        <% if friend_request.receiver == current_user %>
+        <div class="col-4">
+          <div class="card" style="min-height: 150px;">
+            <div class="card heading">
+              <h4><strong><%= friend_request.requestor.username %></strong></h4>
+            </div>
+            <div class="card body">
+              <%= simple_form_for @friendship do |form| %>
+              <%= form.input :friend_a_id,:input_html => { :value => friend_request.requestor_id} ,as: :hidden %>
+              <%= form.input :friend_b_id, :input_html => { :value => friend_request.receiver_id }, as: :hidden %>
+              <%= form.submit "Accept", class: 'btn btn-primary' %>
+              <%= link_to "Delete",friend_request_path(friend_request),method: :delete,data:{confirm: "Are you sure to delete friendrequest"},class: 'btn btn-danger' %>
+
+                <% end %>
+            </div>
+          </div>
+        </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h2>Friend Requests Sent</h2></br>
+      <% @friend_requests.each do|friend_request| %>
+        <% if friend_request.requestor == current_user %>
+        <div class="col-4">
+          <div class="card" style="min-height: 150px;">
+            <div class="card heading">
+              <h4><strong><%= friend_request.receiver.username %></strong></h4>
+            </div>
+            <div class="card body">
+              <%= link_to "Cancel",friend_request_path(friend_request),method: :delete,data:{confirm: "Are you sure to cancel friendrequest"},class: 'btn btn-danger' %>
+            </div>
+          </div>
+        </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

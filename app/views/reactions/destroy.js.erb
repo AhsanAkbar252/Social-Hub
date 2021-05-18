@@ -1,0 +1,7 @@
+console.log("<%=@post.id%>");
+debugger;
+$('#reaction-<%= @post.id %>').removeClass("fas fa-heart");
+$('#reaction-<%= @post.id %>').addClass("far fa-heart");
+$('#reaction-<%= @post.id %>').attr("data-method", "post");
+$('#reaction-<%= @post.id %>').attr("href", "<%= post_reactions_path(@post) %>");
+$('#ins-<%= @post.id %>').text('<%= @post.reactions.count %>')

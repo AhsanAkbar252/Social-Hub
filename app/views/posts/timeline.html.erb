@@ -1,0 +1,243 @@
+<div class="theme-layout">
+  <section>
+    <%= render 'shared/toparea' %>
+  </section><!-- top area -->
+
+    
+  <section>
+    <div class="gap gray-bg">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="row" id="page-contents">
+              <div class="col-lg-3">
+                <aside class="sidebar static">
+<!--                   <div class="widget">
+                      <h4 class="widget-title">Socials</h4>
+                      <ul class="socials">
+                        <li class="facebook">
+                          <a title="" href="#"><i class="fab fa-facebook-f"></i> <span>facebook</span> <ins>45 likes</ins></a>
+                        </li>
+                        <li class="twitter">
+                          <a title="" href="#"><i class="fab fa-twitter"></i> <span>twitter</span><ins>25 likes</ins></a>
+                        </li>
+                        <li class="google">
+                          <a title="" href="#"><i class="fab fa-google"></i> <span>google</span><ins>35 likes</ins></a>
+                        </li>
+                      </ul>
+                    </div> -->
+                  <div class="widget">
+                    <%= render 'shared/shortcuts' %>
+                  </div><!-- Shortcuts -->
+
+<!--                   <div class="widget">
+                    <= render 'shared/activity' %>
+                  </div> --><!-- recent activites -->
+
+                  <div class="widget stick-widget">
+                    
+                  </div><!-- who's following -->
+                </aside>
+              </div><!-- sidebar -->
+
+
+              <div class="col-lg-6">
+                <div class="loadMore">
+                  <% if current_user == @user %>
+                  <div class="central-meta item">
+                    <div class="new-postbox">
+                      <figure>
+                        <% if current_user.profile != nil  && current_user.profile.photo.url != nil %>
+                          <%= image_tag (current_user.profile.photo.url :controls =>true, style: 'display:inline') %>
+                        <% else %>
+                          <%= image_pack_tag 'media/images/resources/default_profile.png'%>
+                        <% end %>
+                      </figure>
+                      <div class="newpst-input">
+                        <%= simple_form_for @post,  html: { multipart: true }  do|f| %>             <!--              <textarea rows="2" placeholder="write something"></textarea> -->
+                        
+                        <%= f.text_area :description, placeholder:"write something" %>
+                        <img id="img_prev" width="320" class="hidden"/> 
+                         <%= f.hidden_field :photos_cache %>
+                        <video class="hidden" id="vid_prev"  width="320" height="240" style="display: none;"controls>
+                          <%= f.hidden_field :videos_cache %></video>
+
+                        
+                          <div class="attachments">
+                            <ul>
+                              <li>
+                                <i class="fa fa-image"></i>
+                                <label class="fileContainer">
+                                  <%= f.file_field :photos, multiple: true,class: "hide",id: "avatar-upload" %>
+                                </label>
+                                <!-- <i class="fa fa-music"></i> -->
+                              </li>
+<!--                                 <i class="fas fa-video"></i> -->
+                              <li>
+                                <i class="fas fa-video"></i>
+                                <label class="fileContainer">
+                                  <%= f.file_field :videos, multiple: true,class: "hide", id: "video-upload"  %>
+                                </label>
+                              </li>
+                              <li>
+                                <%= f.submit "Publish" , class: "btn btn-primary publish_button" %>
+                              </li>
+                            </ul>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div><!-- add post new box -->
+                  <% end %>
+
+
+                  <% @posts.order('created_at DESC').each do |post| %>
+                  <div class="central-meta item">
+                    <div class="user-post">
+                      <div class="friend-info">
+                        <figure>
+                          <% if post.user.profile != nil && post.user.profile.photo.url != nil %>
+                             <%= image_tag (post.user.profile.photo.url :controls =>true, style: 'display:inline') %>
+                          <% else %>
+                            <%= image_pack_tag 'media/images/resources/default_profile.png'%>
+                          <% end %>          
+                        </figure>
+                        <div class="friend-name">
+                          <% if post.user.profile != nil %>
+                          <ins><a href="<%= profile_path(post.user.profile) %>" title=""><%= post.user.username %></a></ins>
+                          <% else %>
+                          <ins><a href="" title=""><%= post.user.username %></a></ins>
+                          <% end %>
+                          <span>published: <%= post.created_at %></span>
+                        </div>
+                        <div class="post-meta">
+                        <% if post.photos != [] %>
+                          <% post.photos.each do |photo| %>
+                            <%= image_tag (photo.url :controls =>true ) %>
+
+                          <% end %>
+                        <% end %>
+                        <% if post.videos != [] %>
+                          <% post.videos_urls.each do |video| %>
+                            <%= video_tag(video, controls: true) %>
+                          <% end %>
+                        <% end %>
+                          <!-- img src="images/resources/user-post.jpg" alt=""> -->
+                          <div class="description">  
+                            <p><%= post.description %></p>
+                          </div>
+                          <div class="we-video-info">
+                            <ul>
+                              
+                              <li>
+                                <span class="views" data-toggle="tooltip" title="views">
+                                  <i class="fa fa-eye"></i>
+                                  <ins>1.2k</ins>
+                                </span>
+                              </li>
+                              <li>
+                                <span class="comment" data-toggle="tooltip" title="Comments">
+                                  <i class="comment_button fa fa-comments" data-att = "comment-post-<%= post.id %>"></i>
+                                  <ins><%= post.comments.count %></ins>
+                                </span>
+                              </li>
+                              <li>
+                                <span class="like" data-toggle="tooltip" title="like">
+                                  <% pre_like = post.reactions.find { |reaction| reaction.user_id == current_user.id} %>
+                                  <% if pre_like %>
+                                    <span><%= link_to '', post_reaction_path(post, pre_like), class: "fas fa-heart", method: :delete %>
+                                  <% else %>
+                                    <span><%= link_to '', post_reactions_path(post), class: "far fa-heart", method: :post %>
+                                  <% end %>
+                                  <ins><%= post.reactions.count %></ins>
+                                </span>
+                              </li>
+                              <li>
+                                <span class="dislike" data-toggle="tooltip" title="dislike">
+                                  <i class="fas fa-heartbeat"></i>
+                                  <ins>200</ins>
+                                </span>
+                              </li>
+                              <li class="social-media">
+                                <div class="menu">
+                                  <div class="btn trigger"><i class="fa fa-share-alt"></i></div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i style="color: black;background-color: white;" class="fab fa-linkedin fa-lg "></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon "><a href="#" title=""><i style="color: black;background-color: white;" class="fab fa-facebook fa-2x"></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title="" ><i style="color: black;background-color: white;"  class="fab fa-google-plus fa-2x"></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i style="padding-top: 5px;" class="fab fa-twitter text-white"></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i style="padding-top: 5px;" class="fab fa-tiktok text-white"></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i class="fab fa-instagram fa-2x text-white"></i></a>
+                                  </div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i class="fab fa-dribbble fa-2x text-white"></i></a>
+                                  </div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i style="color: black;background-color: white;" class="fab fa-pinterest fa-2x "></i></a>
+                                  </div>
+                                  </div>
+
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <ul class="comments hide" id= "comment-post-<%= post.id %>">
+                        <%= render partial: './comments/comment', collection: post.comments %>
+                        <%= simple_form_for [post, Comment.new] do |f| %>
+                          <div class="form-group" style="max-width: 500px;">
+                            <%= f.text_area :content, class: "form-control", placeholder: "Add a Reply" %>
+                          </div>
+                          <%= f.input :user_id,:input_html => { :value => current_user.id} ,as: :hidden %>
+                          <span><%= f.submit "Reply", class: "btn btn-primary" %></span>
+                        <% end %>
+                      </ul>
+                    </div>
+                  </div>
+                  <% end %>
+                </div>
+              </div><!-- centerl meta -->
+              <div class="col-lg-3">
+                <aside class="sidebar static">
+<!--                   <div class="widget">
+                    <div class="banner medium-opacity bluesh">
+                      <a class="bg-image" href="newsfeed.html" title=""><= image_pack_tag 'media/images/resources/baner-widgetbg.jpg'%></a>
+                      <div style="background-image: url(images/resources/baner-widgetbg.jpg)" class="bg-image"></div>
+                      <div class="baner-top">
+                        <span><= image_pack_tag 'media/images/book-icon.png'%></span>
+                        <i class="fa fa-ellipsis-h"></i>
+                      </div>
+                      <div class="banermeta">
+                        <p>
+                          create your own favourit page.
+                        </p>
+                        <span>like them all</span>
+                        <a href="<%= new_page_path %>" title="" data-ripple="">start now!</a>
+                      </div>
+                    </div>                      
+                  </div>
+ -->                  <div class="widget friend-list stick-widget">
+                    <%= render 'shared/friends' %>
+                  </div><!-- friends list sidebar -->
+                </aside>
+              </div><!-- sidebar -->
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>  
+  </section>
+</div>

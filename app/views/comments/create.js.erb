@@ -1,0 +1,15 @@
+debugger;
+$("#com-<%= @commentable.id %>").val('');
+
+$('#recent-comments-<%= @commentable.id %>').append('<%= j render @commentable.comments.last %>')
+
+// $("#com-<%= @commentable.id %>").val('');
+
+// $('#rec-comments-<%= @commentable.id %>').append('<%= j render @commentable.comments.last %>')
+
+// $('#comt-<%= @commentable.id %>').text('<%= @commentable.comments.count %>');
+
+if($('<%= defined?(@commentable.reactions) %>')){
+  $('#comt-<%= @commentable.id %>').text('<%= @commentable.comments.count %>');
+}
+

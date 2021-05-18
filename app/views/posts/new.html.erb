@@ -1,0 +1,22 @@
+<h1 align="center">ADD NEW POST</h1>
+ <div class="container">
+  <div class="row">
+    <div class="col-10" style="margin-left: 100px;">
+      <%= simple_form_for @post,  html: { multipart: true }  do|f| %>
+        <h3>Post</h3>
+        <div>
+          <div class="form-group">
+            <%= f.text_area :description, class: "form-control", placeholder:"First name" %>
+          </div>
+          <div class="form-group">
+            <%= f.file_field :photos, multiple: true %>
+          </div>
+          <div class="form-group">
+            <%= f.file_field :videos, multiple: true %>
+          </div>
+        </div>
+        <%= f.submit  class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+</div>

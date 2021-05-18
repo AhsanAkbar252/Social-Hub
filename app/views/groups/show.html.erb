@@ -1,0 +1,536 @@
+<div class="theme-layout">
+  <section>
+    <div class="feature-photo">
+      <div class="avat" style="overflow: hidden;position: relative;width: 100%;max-height: 500px;" >
+        <figure>        
+          <% if @group.cover_photo.url != nil %>
+           <%= image_tag @group.cover_photo.url ,:style=> 'width: 100%;' %>
+          <% else %>
+          <%= image_pack_tag 'media/images/resources/default_group_cover.png',:style=> 'width: 100%;'%>
+          <% end %>
+        </figure>
+      </div>
+      <div class="add-btn">
+        <% if @group.admin_id == current_user.id %>
+          <div>
+            <span style="margin-right: 100px;color: #f8f9fa;background-color: black;"><%= @group.users.count %> members</span>
+             <%= link_to "Delete Group", group_path(@group) ,method: :delete, class: "add-butn",style: "top:0px;" %>
+           </div>
+        <% else %>
+          <% if !(current_user.in? @group.users)  %> 
+          <span style="margin-right: 80px;color: #f8f9fa;background-color: black;"><%= @group.users.count %> members</span>
+          <%= link_to "Join Now", group_users_path(@group) ,method: :post, class: "add-butn",style: "top:0px;" %>
+          <% else %>
+            <% @group.group_users.each do|group_user| %>
+              <% if group_user.user == current_user %>
+              <div>
+                <span style="margin-right: 80px;color: #f8f9fa;background-color: black;"><%= @group.users.count %> members</span>
+                 <%= link_to "Leave", group_user_path(group_user) ,method: :delete, class: "add-butn",style: "top:0px;" %>
+               </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+<!--       <form class="edit-phto">
+        <i class="fa fa-camera-retro"></i>
+        <label class="fileContainer">
+          Edit Cover Photo
+        <input type="file"/>
+        </label>
+      </form> -->
+      <div class="container-fluid">
+        <div class="row merged">
+          <div class="col-lg-2 col-sm-3">
+            <div class="user-avatar"style="background-color: black;" >
+              <figure style="max-width: 250px; max-height: 150px;overflow: hidden;height: auto;width: auto;">
+                <% if @group.photo.url != nil %>
+                 <%= image_tag (@group.photo.url :controls =>true, style: 'display:inline') %>
+                <% else %>
+                <%= image_pack_tag 'media/images/resources/default_group.png'%>
+                <% end %>
+<!--                 <form class="edit-phto">
+                  <i class="fa fa-camera-retro"></i>
+                  <label class="fileContainer">
+                    Edit Display Photo
+                    <input type="file"/>
+                  </label>
+                </form>
+              </figure> -->
+            </div>
+          </div>
+          <div class="col-lg-10 col-sm-9">
+            <div class="timeline-info">
+              <ul>
+                <li class="admin-name">
+                  <h5><%= @group.group_name %></h5>
+                  <!-- <span>Group Admin</span> -->
+                </li>
+                <li>
+                  <a class="" href="<%= group_path(@group) %>" title="" data-ripple="">time line</a>
+<!--                   <a class="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
+                  <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a> -->
+                  <a class="" href="<%= group_users_path(@group.id) %>" title="" data-ripple="">Members</a>
+                  <!-- <a class="" href="timeline-groups.html" title="" data-ripple="">Groups</a> -->
+                  <a class="" href="<%= profile_path(current_user.profile) %>" title="" data-ripple="">about</a>
+                  <!-- <a class="" href="#" title="" data-ripple="">more</a> -->
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- top area -->
+
+    
+  <section>
+    <div class="gap gray-bg">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="row" id="page-contents">
+              <div class="col-lg-3">
+                <aside class="sidebar static">
+                 <div class="widget stick-widget">
+                    <h4 class="widget-title">Group intro</h4>
+                    <ul class="short-profile">
+                      <li>
+                        <span>about</span>
+                        <p><%= @group.description%></p>
+                      </li>
+                      <li>
+                        <span><i class="fa fa-globe"style="color: #171616;font-size: 20px;"></i>Public</span>
+                        <p>Anyone can see who's in the group and what they post. </p>
+                      </li>
+                      <li>
+                        <span><i class="fa fa-eye"style="color: #171616;font-size: 20px;"></i>Visible</span>
+                        <p>Anyone can find this group. </p>
+                      </li>
+                    </ul>
+                  </div><!-- profile intro widget -->
+<!--                   <div class="widget">
+                      <h4 class="widget-title">Socials</h4>
+                      <ul class="socials">
+                        <li class="facebook">
+                          <a title="" href="#"><i class="fab fa-facebook-f"></i> <span>facebook</span> <ins>45 likes</ins></a>
+                        </li>
+                        <li class="twitter">
+                          <a title="" href="#"><i class="fab fa-twitter"></i> <span>twitter</span><ins>25 likes</ins></a>
+                        </li>
+                        <li class="google">
+                          <a title="" href="#"><i class="fab fa-google"></i> <span>google</span><ins>35 likes</ins></a>
+                        </li>
+                      </ul>
+                    </div> -->
+<!--                   <div class="widget">
+                    <h4 class="widget-title">Shortcuts</h4>
+                    <ul class="naves">
+                      <li>
+                        <i class="fa fa-clipboard"></i>
+                        <a href="newsfeed.html" title="">News feed</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-mouse"></i>
+                        <a href="inbox.html" title="">Inbox</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-file"></i>
+                        <a href="fav-page.html" title="">My pages</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-user"></i>
+                        <a href="timeline-friends.html" title="">friends</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-image"></i>
+                        <a href="timeline-photos.html" title="">images</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-video"></i>
+                        <a href="timeline-videos.html" title="">videos</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-comments"></i>
+                        <a href="messages.html" title="">Messages</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-bell"></i>
+                        <a href="notifications.html" title="">Notifications</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-share"></i>
+                        <a href="people-nearby.html" title="">People Nearby</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-chart-line"></i>
+                        <a href="insights.html" title="">insights</a>
+                      </li>
+                      <li>
+                        <i class="fa fa-power-off"></i>
+                        <a href="landing.html" title="">Logout</a>
+                      </li>
+                    </ul>
+                  </div> --><!-- Shortcuts -->
+<!-- 
+                  <div class="widget">
+                    <h4 class="widget-title">Recent Activity</h4>
+                    <ul class="activitiez">
+                      <li>
+                        <div class="activity-meta">
+                          <i>10 hours Ago</i>
+                          <span><a href="#" title="">Commented on Video posted </a></span>
+                          <h6>by <a href="newsfeed.html">black demon.</a></h6>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="activity-meta">
+                          <i>30 Days Ago</i>
+                          <span><a href="newsfeed.html" title="">Posted your status. “Hello guys, how are you?”</a></span>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="activity-meta">
+                          <i>2 Years Ago</i>
+                          <span><a href="#" title="">Share a video on her timeline.</a></span>
+                          <h6>"<a href="newsfeed.html">you are so funny mr.been.</a>"</h6>
+                        </div>
+                      </li>
+                    </ul>
+                  </div><recent activites --> 
+<!-- 
+                  <div class="widget stick-widget">
+                    <h4 class="widget-title">Who's follownig</h4>
+                    <ul class="followers">
+                      <li>
+                        <figure><= image_pack_tag 'media/images/resources/friend-avatar2.jpg'%></figure>
+                        <div class="friend-meta">
+                          <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
+                          <a href="#" title="" class="underline">Add Friend</a>
+                        </div>
+                      </li>
+                    </ul>
+                  </div> --><!-- who's following -->
+                </aside>
+              </div><!-- sidebar -->
+
+
+              <div class="col-lg-6">
+                <div class="loadMore">
+                  <div class="central-meta item">
+                    <div class="new-postbox">
+                      <figure>
+                        <% if current_user.profile != nil  && current_user.profile.photo.url != nil %>
+                           <%= image_tag (current_user.profile.photo.url :controls =>true, style: 'display:inline') %>
+                        <% else %>
+                          <%= image_pack_tag 'media/images/resources/default_profile.png'%>
+                        <% end %>
+                      </figure>
+                      <div class="newpst-input">
+                        <%= simple_form_for @post,  html: { multipart: true }  do|f| %>             <!--              <textarea rows="2" placeholder="write something"></textarea> -->
+                        
+                        <%= f.text_area :description, placeholder:"write something" %>
+                        <img id="img_prev" width="320" class="hidden"/> 
+                         <%= f.hidden_field :photos_cache %>
+                        <video class="hidden" id="vid_prev"  width="320" height="240" style="display: none;"controls>
+                          <%= f.hidden_field :videos_cache %></video>
+
+                        
+                          <div class="attachments">
+                            <ul>
+                              <li >
+                                <i class="fa fa-image"></i>
+                                <label class="fileContainer">
+                                  <%= f.file_field :photos, multiple: true,class: "hide",id: "avatar-upload" %>
+                                </label>
+                                <!-- <i class="fa fa-music"></i> -->
+                              </li>
+<!--                                 <i class="fas fa-video"></i> -->
+                              <li>
+                                <i class="fas fa-video"></i>
+                                <label class="fileContainer">
+                                  <%= f.file_field :videos, multiple: true,class: "hide", id: "video-upload"  %>
+                                </label>
+                              </li>
+                              <li style="display: inline-flex;height: 40px;align-items: center;    vertical-align: super;">
+                                <%= f.input :group_id,:input_html => { :value => @group.id} ,as: :hidden %>
+                                <%= f.submit "Publish" , class: "btn btn-primary" %>
+                              </li>
+                            </ul>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div><!-- add post new box -->
+
+                  <% if @group.posts != [] %>
+                  <% @group.posts.order('created_at DESC').each do |post| %>
+                  <div class="central-meta item">
+                    <div class="user-post">
+                      <div class="friend-info">
+                        <figure>
+                          <% if post.user.profile != nil && post.user.profile.photo.url != nil %>
+                             <%= image_tag (post.user.profile.photo.url :controls =>true, style: 'display:inline') %>
+                          <% else %>
+                            <%= image_pack_tag 'media/images/resources/default_profile.png'%>
+                          <% end %>          
+                        </figure>
+                        <div class="friend-name">
+                          <% if post.user.profile != nil %>
+                          <ins><a href="<%= profile_path(post.user.profile) %>" title=""><%= post.user.username %></a></ins>
+                          <% else %>
+                          <ins><a href="" title=""><%= post.user.username %></a></ins>
+                          <% end %>
+                          <span>published: <%= post.created_at %></span>
+                        </div>
+                        <div class="post-meta">
+                        <% if post.photos != [] %>
+                          <% post.photos.each do |photo| %>
+                            <%= image_tag (photo.url :controls =>true ) %>
+
+                          <% end %>
+                        <% end %>
+                        <% if post.videos != [] %>
+                          <% post.videos_urls.each do |video| %>
+                            <%= video_tag(video, controls: true) %>
+                          <% end %>
+                        <% end %>
+                          <!-- img src="images/resources/user-post.jpg" alt=""> -->
+                          <div class="description">  
+                            <p><%= post.description %></p>
+                          </div>
+                          <div class="we-video-info">
+                            <ul>
+                              
+                              <li>
+                                <span class="views" data-toggle="tooltip" title="views">
+                                  <i class="fa fa-eye"></i>
+                                  <ins>1.2k</ins>
+                                </span>
+                              </li>
+                              <li>
+                                <span class="comment" data-toggle="tooltip" title="Comments">
+                                  <i class="comment_button fa fa-comments" data-att = "comment-post-<%= post.id %>"></i>
+                                  <ins><%= post.comments.count %></ins>
+                                </span>
+                              </li>
+                              <li>
+                                <span class="like" data-toggle="tooltip" title="like">
+                                  <% pre_like = post.reactions.find { |reaction| reaction.user_id == current_user.id} %>
+                                  <% if pre_like %>
+                                    <span><%= link_to '', post_reaction_path(post, pre_like), class: "fas fa-heart", method: :delete %>
+                                  <% else %>
+                                    <span><%= link_to '', post_reactions_path(post), class: "far fa-heart", method: :post %>
+                                  <% end %>
+                                  <ins><%= post.reactions.count %></ins>
+                                </span>
+                              </li>
+                              <li>
+                                <span class="dislike" data-toggle="tooltip" title="dislike">
+                                  <i class="fas fa-heartbeat"></i>
+                                  <ins>200</ins>
+                                </span>
+                              </li>
+                              <li class="social-media">
+                                <div class="menu">
+                                  <div class="btn trigger"><i class="fa fa-share-alt"></i></div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i class="fab fa-html5 fa-2x text-white "></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon "><a href="#" title=""><i class="fab fa-facebook"></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title="" ><i class="fab fa-google-plus fa-2x text-white"></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i class="fab fa-twitter fa-2x text-white"></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i class="fab fa-css3 fa-2x text-white"></i></a></div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i class="fab fa-instagram fa-2x text-white"></i></a>
+                                  </div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i class="fab fa-dribbble fa-2x text-white"></i></a>
+                                  </div>
+                                  </div>
+                                  <div class="rotater">
+                                  <div class="btn btn-icon"><a href="#" title=""><i class="fab fa-pinterest fa-2x text-white"></i></a>
+                                  </div>
+                                  </div>
+
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <ul class="comments hide" id= "comment-post-<%= post.id %>">
+                        <%= render partial: './comments/comment', collection: post.comments %>
+                        <%= simple_form_for [post, Comment.new] do |f| %>
+                          <div class="form-group" style="max-width: 500px;">
+                            <%= f.text_area :content, class: "form-control", placeholder: "Add a Reply" %>
+                          </div>
+                          <%= f.input :user_id,:input_html => { :value => current_user.id} ,as: :hidden %>
+                          <span><%= f.submit "Reply", class: "btn btn-primary" %></span>
+                        <% end %>
+                      </ul>
+<!-- 
+                      <div class="coment-area hide" id= "comment-post-<%= post.id %>">
+                        <ul class="we-comet">
+                          <li>
+                            <a href="#" title="" class="showmore underline">more comments</a>
+                          </li>
+                          <li class="post-comment">
+                            <div class="comet-avatar">
+                              <img src="images/resources/comet-1.jpg" alt="">
+                            </div>
+                            <div class="post-comt-box">
+                              <form method="post">
+                                <textarea placeholder="Post your comment"></textarea>
+                                <div class="add-smiles">
+                                  <span class="em em-expressionless" title="add icon"></span>
+                                </div>
+                                <div class="smiles-bunch">
+                                  <i class="em em---1"></i>
+                                  <i class="em em-smiley"></i>
+                                  <i class="em em-anguished"></i>
+                                  <i class="em em-laughing"></i>
+                                  <i class="em em-angry"></i>
+                                  <i class="em em-astonished"></i>
+                                  <i class="em em-blush"></i>
+                                  <i class="em em-disappointed"></i>
+                                  <i class="em em-worried"></i>
+                                  <i class="em em-kissing_heart"></i>
+                                  <i class="em em-rage"></i>
+                                  <i class="em em-stuck_out_tongue"></i>
+                                </div>
+                                <button type="submit"></button>
+                              </form> 
+                            </div>
+                          </li>
+                        </ul>
+                      </div> -->
+                    </div>
+                  </div>
+                  <% end %>
+                  <% end %>
+                </div>
+              </div><!-- centerl meta -->
+              <div class="col-lg-3">
+                <aside class="sidebar static">
+                  <div class="widget">
+                    <div class="banner medium-opacity bluesh">
+                      <a class="bg-image"  title=""></a>
+                      <!-- <div style="background-image: url(images/resources/baner-widgetbg.jpg)" class="bg-image"></div> -->
+                      <div class="baner-top">
+                        <span><%= image_pack_tag 'media/images/book-icon.png'%></span>
+                        <i class="fa fa-ellipsis-h"></i>
+                      </div>
+                      <div class="banermeta">
+                        <p>
+                          create your own Group Now.
+                        </p>
+                        <span>like them all</span>
+                        <a href="<%= new_group_path %>" title="" data-ripple="">start now!</a>
+                      </div>
+                    </div>                      
+                  </div>
+                  <div class="widget friend-list stick-widget">
+                    <h4 class="widget-title">Group Members</h4>
+                    <div id="searchDir"></div>
+                    <ul id="people-list" class="friendz-list">
+
+                      <% @group.users.each do |friend| %>
+                        <% if friend.id != current_user.id %>
+                          <li>
+                            <figure>
+                            <% if friend.profile!= nil && friend.profile.photo.url !=nil %>
+                               <%= image_tag (friend.profile.photo.url :controls =>true, style: 'display:inline') %>
+                            <% else %> 
+                              <%= image_pack_tag 'media/images/resources/friend-avatar.jpg'%>
+                            <% end %>
+                              <span class="status f-away"></span>
+                            </figure>
+                            <div class="friendz-meta">
+                              <a href=""><%= friend.username %></a>
+                            </div>
+                          </li> 
+                        <% end %> 
+                      <% end %>                    
+                    </ul>
+                    <div class="chat-box">
+                      <div class="chat-head">
+                        <span class="status f-online"></span>
+                        <h6>Bucky Barnes</h6>
+                        <div class="more">
+                          <span><i class="fas fa-ellipsis-h"></i></span>
+                          <span class="close-mesage"><i class="fas fa-window-close"></i></span>
+                        </div>
+                      </div>
+                      <div class="chat-list">
+                        <ul>
+                          <li class="me">
+                            <div class="chat-thumb"><%= image_pack_tag 'media/images/resources/user-avatar.jpg'%></div>
+                            <div class="notification-event">
+                              <span class="chat-message-item">
+                                Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks
+                              </span>
+                              <span class="notification-date"><time datetime="2004-07-24T18:18" class="entry-date updated">Yesterday at 8:10pm</time></span>
+                            </div>
+                          </li>
+                          <li class="you">
+                            <div class="chat-thumb"><%= image_pack_tag 'media/images/resources/user-avatar.jpg'%></div>
+                            <div class="notification-event">
+                              <span class="chat-message-item">
+                                Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks
+                              </span>
+                              <span class="notification-date"><time datetime="2004-07-24T18:18" class="entry-date updated">Yesterday at 8:10pm</time></span>
+                            </div>
+                          </li>
+                          <li class="me">
+                            <div class="chat-thumb"><%= image_pack_tag 'media/images/resources/user-avatar.jpg'%></div>
+                            <div class="notification-event">
+                              <span class="chat-message-item">
+                                Hi James! Please remember to buy the food for tomorrow! I’m gonna be handling the gifts and Jake’s gonna get the drinks
+                              </span>
+                              <span class="notification-date"><time datetime="2004-07-24T18:18" class="entry-date updated">Yesterday at 8:10pm</time></span>
+                            </div>
+                          </li>
+                        </ul>
+                        <form class="text-box">
+                          <textarea placeholder="Post enter to post..."></textarea>
+                          <div class="add-smiles">
+                            <span title="add icon" class="em em-expressionless"></span>
+                          </div>
+                          <div class="smiles-bunch">
+                            <i class="em em---1"></i>
+                            <i class="em em-smiley"></i>
+                            <i class="em em-anguished"></i>
+                            <i class="em em-laughing"></i>
+                            <i class="em em-angry"></i>
+                            <i class="em em-astonished"></i>
+                            <i class="em em-blush"></i>
+                            <i class="em em-disappointed"></i>
+                            <i class="em em-worried"></i>
+                            <i class="em em-kissing_heart"></i>
+                            <i class="em em-rage"></i>
+                            <i class="em em-stuck_out_tongue"></i>
+                          </div>
+                          <button type="submit"></button>
+                        </form>
+                      </div>
+                    </div>
+                  </div><!-- friends list sidebar -->
+                </aside>
+              </div><!-- sidebar -->
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>  
+  </section>
+</div>

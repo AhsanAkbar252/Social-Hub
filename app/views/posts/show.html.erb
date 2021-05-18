@@ -1,0 +1,25 @@
+<h1>Posts</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-10">
+          <div class="card" style="margin-top: 10px;">
+            <div class="card heading">
+              <h4><strong><%= @post.user.username %></strong></h4>
+            </div>
+            <div class="card body" style="min-height: 100px;">
+              <p><%= @post.description %></p>
+              <p><%= @post.reactions.count %> <%= (@post.reactions.count) == 1 ? 'Reaction' : 'Reactions'%></p>
+              <% pre_like = @post.reactions.find { |reaction| reaction.user_id == current_user.id} %>
+              <% if pre_like %>
+                <span><%= link_to 'UnReact', post_reaction_path(@post, pre_like), class: "btn btn-danger", method: :delete %></span>
+              <% else %>
+                <span><%= link_to 'React', post_reactions_path(@post), class: "btn btn-success", method: :post %></span>
+              <% end %>
+            </div>
+            <ul>
+              <%= render partial: 'comments/comment', collection: @post.comments %>
+            </ul>
+          </div>
+    </div>
+  </div>
+</div>

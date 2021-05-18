@@ -1,0 +1,159 @@
+<div class="theme-layout">
+  <section>
+
+  </section><!-- top area -->
+    <%= render 'shared/toparea' %>
+  <section>
+    <div class="gap gray-bg">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="row" id="page-contents">
+              <div class="col-lg-3">
+                <aside class="sidebar static">
+                  <div class="widget side">
+                    <%= render 'shared/shortcuts' %>
+                    </div><!-- Shortcuts -->
+<!--                   <div class="widget stick-widget">
+                    <h4 class="widget-title">Profile intro</h4>
+                    <ul class="short-profile">
+                      <li>
+                        <span>about</span>
+                        <p>Hi, i am jhon kates, i am 32 years old and worked as a web developer in microsoft company. </p>
+                      </li>
+                      <li>
+                        <span>fav tv show</span>
+                        <p>Hi, i am jhon kates, i am 32 years old and worked as a web developer in microsoft company. </p>
+                      </li>
+                      <li>
+                        <span>favourit music</span>
+                        <p>Hi, i am jhon kates, i am 32 years old and worked as a web developer in microsoft company. </p>
+                      </li>
+                    </ul>
+                  </div> --><!-- profile intro widget -->
+
+                </aside>
+              </div><!-- sidebar -->
+              <div class="col-lg-6 middle">
+                <div class="central-meta">
+                  <div class="frnds">
+                    <ul class="nav nav-tabs">
+                       <li class="nav-item"><a class="active" href="#frends" data-toggle="tab">Friends</a> <span><%= @user.friendships.count %></span></li>
+                       <% if current_user == @user %>
+                          <li class="nav-item"><a class="" href="#frends-req" data-toggle="tab">Friend Requests</a><span><%= @user.friend_requests.count %></span></li>
+                       <% end %>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                      <div class="tab-pane active fade show " id="frends" >
+                      <ul class="nearby-contct">
+                        <% @user.friendships.each do|friendship| %>
+                          <% if friendship.friend_a != @user %>
+                            <% @friend = friendship.friend_a %>
+                          <% elsif friendship.friend_b != @user %>
+                            <% @friend = friendship.friend_b %>
+                          <% end %>
+                          <li>
+                            <div class="nearly-pepls">
+                              <figure>
+                                <a href="<%= timeline_path(@friend.id) %>" title="">
+                                  <% if @friend.profile != nil  && @friend.profile.photo.url != nil %>
+                                    <%= image_tag (@friend.profile.photo.url :controls =>true, style: 'display:inline') %>
+                                  <% else %>
+                                    <%= image_pack_tag 'media/images/resources/default_profile.png'%></a>
+                                  <% end %>
+                              </figure>
+                              <div class="pepl-info">
+                                <h4><a href="<%= timeline_path(@friend.id) %>" title=""><%= @friend.username %></a></h4>
+                                <span>work as dancers</span>
+                                <% if current_user == @user %>
+                                  <%= link_to "unfriend",friendship_path(friendship),method: :delete,data:{confirm: "Are you sure to Unfriend this user"},class: 'add-butn' %>
+                                <% end %>
+                              </div>
+                            </div>
+                          </li>
+                        <% end %>
+                      </ul>
+                      <div class="lodmore"><button class="btn-view btn-load-more"></button></div>
+                      </div>
+                      <div class="tab-pane fade" id="frends-req" >
+                      <ul class="nearby-contct">
+                        <% @friend_requests.each do|friend_request| %>
+                          <% if friend_request.receiver == current_user %>
+                            <li>
+                              <div class="nearly-pepls">
+                                <figure>
+                                  <a href="<%= timeline_path(friend_request.requestor.id) %>" title="">
+                                    <% if friend_request.requestor.profile != nil  && friend_request.requestor.profile.photo.url != nil %>
+                                      <%= image_tag (friend_request.requestor.profile.photo.url :controls =>true, style: 'display:inline') %>
+                                    <% else %>
+                                      <%= image_pack_tag 'media/images/resources/default_profile.png'%></a>
+                                    <% end %>
+                                </figure>
+                                <div class="pepl-info">
+                                  <h4><a href="<%= timeline_path(friend_request.requestor.id) %>" title=""><%= friend_request.requestor.username %></a></h4>
+                                  <span>work as dancers</span>
+                                  <%= simple_form_for @friendship, :html => { :style => ' display: flex;position: absolute;right: -0%;top: -0px;' } do |form| %>
+                                    <%= form.input :friend_a_id,:input_html => { :value => friend_request.requestor_id} ,as: :hidden %>
+                                    <%= form.input :friend_b_id, :input_html => { :value => friend_request.receiver_id }, as: :hidden %>
+                                    <%= form.submit "Confirm", class: 'add-butn more-action',style: "width: max-content;color: white;border-color: white; height: 26.3px;border: none;margin-top:10px;font-size: 13px;" %>
+
+                                  <% end %>
+                                  <%= link_to "Delete Request",friend_request_path(friend_request),method: :delete,data:{confirm: "Are you sure to delete friendrequest"},class: 'add-butn more-action' %>
+                                </div>
+                              </div>
+                            </li>
+                          <% end %>
+                        <% end %>
+
+
+                        <% @friend_requests.each do|friend_request| %>
+                          <% if friend_request.requestor == current_user %>
+                            <li>
+                              <div class="nearly-pepls">
+                                <figure>
+                                  <a href="<%= timeline_path(friend_request.receiver.id) %>" title="">
+                                    <% if friend_request.receiver.profile != nil  && friend_request.receiver.profile.photo.url != nil %>
+                                      <%= image_tag (friend_request.receiver.profile.photo.url :controls =>true, style: 'display:inline') %>
+                                    <% else %>
+                                      <%= image_pack_tag 'media/images/resources/default_profile.png'%></a>
+                                    <% end %>
+                                </figure>
+                                <div class="pepl-info">
+                                  <h4><a href="<% timeline_path(friend_request.receiver.id) %>" title=""><%= friend_request.receiver.username %></a></h4>
+                                  <span>work as dancers</span>
+                                    <%= link_to "Cancel Request",friend_request_path(friend_request),method: :delete,data:{confirm: "Are you sure to cancel friendrequest"},class: 'add-butn more-action',style: "right:0;" %>
+                                </div>
+                              </div>
+                            </li>
+                          <% end %>
+                        <% end %>
+
+                      </ul> 
+                        <button class="btn-view btn-load-more"></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>  
+              </div><!-- centerl meta -->
+              <div class="col-lg-3">
+                <aside class="sidebar static">
+<!--                   <div class="widget">
+                    <= render 'shared/following' %>
+                  </div> --><!-- who's following -->
+                  <div class="widget friend-list stick-widget">
+                    <%= render 'shared/friends' %>
+                  </div><!-- friends list sidebar -->
+                  
+                </aside>
+              </div><!-- sidebar -->
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>  
+  </section>
+</div>
+
+  

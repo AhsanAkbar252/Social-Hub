@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test5</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_pack_tag 'application' %>
+  </head>
+
+  <body>
+    <% if user_signed_in? %>
+      <%= render 'shared/navigation' %>
+      <% end %>
+      <div class="my-3">
+        <%= render 'shared/messages' %>
+        <%= yield %>
+      </div>
+      <%= render 'shared/footer' %>
+
+  </body>
+</html>

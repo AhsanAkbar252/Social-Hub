@@ -1,0 +1,102 @@
+
+
+<div class="theme-layout">
+  <div class="col-lg-12">
+    <div class="central-meta">
+      <div class="messages">
+        <h5 class="f-title"><i class="ti-bell"></i>All Messages <span class="more-options"><i class="fa fa-ellipsis-h"></i></span></h5>
+        <div class="message-box">
+          <ul class="peoples" style="width: 20%;">
+            <% @rooms.each do |room| %>
+            <% if current_user == room.second_person || current_user == room.first_person %>
+                <% if current_user == room.second_person %>
+                <li onclick="location.href='<%= room_path(room) %>'">
+                  <figure>
+                    <% if room.first_person.profile != nil  && room.first_person.profile.photo.url != nil %>
+                      <%= image_tag (room.first_person.profile.photo.url :controls =>true, style: 'display:inline') %>
+                    <% else %>
+                      <%= image_pack_tag 'media/images/resources/default_profile.png'%></a>
+                    <% end %>
+                    <span class="status f-online"></span>
+                  </figure>
+                  <div class="people-name">
+                    <span><%= link_to room.first_person.username, room_path(room) %></span>
+                  </div>
+                </li>
+                <% elsif current_user == room.first_person %>
+                <li onclick="location.href='<%= room_path(room)%>'">
+                  <figure>
+                    <% if room.second_person.profile != nil  && room.second_person.profile.photo.url != nil %>
+                      <%= image_tag (room.second_person.profile.photo.url :controls =>true, style: 'display:inline') %>
+                    <% else %>
+                      <%= image_pack_tag 'media/images/resources/default_profile.png'%></a>
+                    <% end %>
+                    <span class="status f-online"></span>
+                  </figure>
+
+                  <div class="people-name">
+                    <span><%= link_to room.second_person.username, room_path(room) %></span>
+                  </div>
+                </li>
+                <% end %>
+              <%= hidden_field_tag 'room_ids', @rooms.ids %>
+              <% end %> 
+            <% end %>                   
+          </ul>
+          <div class="peoples-mesg-box" style="width: 75%;">
+            <div class="conversation-head">
+              <figure>
+                <% if @user.first.profile != nil  && @user.first.profile.photo.url != nil %>
+                  <%= image_tag (@user.first.profile.photo.url :controls =>true, style: 'display:inline') %>
+                <% else %>
+                  <%= image_pack_tag 'media/images/resources/default_profile.png'%></a>
+                <% end %>
+                <span class="status f-online"></span>
+              </figure>
+              <span><%= @user.first.username %> <i>online</i></span>
+            </div>
+            <ul class="chatting-area chat" data-channel-subscribe="room" data-room-id="<%= @room.id %>" id="chat">
+              <% @room_messages.each do |room_message| %>
+                <% if room_message.user == current_user %>
+                  <li class="me chat-message-container">
+                <% else %>
+                  <li class="you">
+                <% end %>
+                  <!-- <figure><= image_pack_tag 'media/images/resources/user-avatar.jpg'%></figure> -->
+                    <p style="    width: fit-content;max-width: 70%;" ><%= room_message.message %></p>
+                  </li>
+              <% end %>
+            </ul>
+            <div class="message-text-container input-group-append">
+              <%= simple_form_for @room_message, remote: true do |form| %>
+                <span id="user" user-id = "<%= current_user.id %>"></span>
+                  <div class="input-group">
+                    <%= form.input :message, as: :string,
+                     wrapper: false,
+                     label: false,
+                     input_html: {
+                       class: 'chat-input'
+                     } %>
+                    <div class="input-group-append">
+                      <%= form.submit "Send", class: 'btn btn-primary chat-input-button',id: "chat-input-button" %>
+                    </div>
+                  </div>
+                <!-- <button title="send"><i class="fa fa-paper-plane"></i></button> -->
+                <%= form.input :room_id, as: :hidden %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div><!-- centerl meta -->
+</div>  
+
+
+
+
+
+
+
+
+
