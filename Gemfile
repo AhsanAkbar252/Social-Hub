@@ -28,6 +28,7 @@ gem 'redis'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 gem 'devise'
+gem 'mimemagic', '~> 0.3.10'
 
 gem 'bootstrap', '~> 4.3.1'
 gem 'jquery-rails'
