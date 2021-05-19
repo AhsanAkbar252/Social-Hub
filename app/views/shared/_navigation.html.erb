@@ -46,7 +46,7 @@
             <% if current_user.profile != nil %>
               <a class="dropdown-item" href="<%= profile_path(current_user) %>" title="">View profile</a>
             <% else %>
-              <a class="dropdown-item" href="<%= new_profile_path %>" title="">Make Profile</a>
+              <a class="dropdown-item" href="<%= new_profile_path(current_user.id) %>" title="">Make Profile</a>
             <% end %>
           <% end %>
           <div class="dropdown-divider"></div>
@@ -321,7 +321,7 @@
               <% if current_user.profile != nil %>
                 <li><a href="<%= profile_path(current_user) %>" title="">View profile</a></li>
               <% else %>
-                <li><a href="<%= new_profile_path %>" title="">Make Profile</a></li>
+                <li><a href="<%= new_profile_path(current_user) %>" title="">Make Profile</a></li>
               <% end %>
             <% end %>
             <li><%= link_to 'Logout', destroy_user_session_path, method: :delete%></li>

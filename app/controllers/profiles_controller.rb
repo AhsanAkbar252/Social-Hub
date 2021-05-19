@@ -3,6 +3,7 @@ class ProfilesController < ApplicationController
   before_action :valid_user, only: [:edit,:update,:destroy]
   def new
     @profile = Profile.new
+    @user = User.find(params[:format])
   end
 
   def create
