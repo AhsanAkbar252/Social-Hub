@@ -1,24 +1,3 @@
-# README
+# About Social Hub
+Social is an online social media and social networking service. The core features of Social Hub are its News Feed, where users can see updates from their friends, family, and pages they follow, as well as photos and videos shared on their walls. Users can also create their own profiles, add friends, write posts and comments, share photos and videos, and join various groups. Other features of the platform include Pages feature which allow people to join communities based on their interests.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
